@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Inventario Digital - Hospital Tierra y Libertad</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            padding: 60px;
+            min-height: 700px;
+            animation: fadeIn 0.5s;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #2a5298;
+        }
+
+        .logo {
+            font-size: 2.5em;
+            color: #2a5298;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: #1e3c72;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #2a5298;
+            font-size: 2em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        h3 {
+            color: #1e3c72;
+            font-size: 1.5em;
+            margin: 30px 0 20px 0;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.3em;
+            margin-top: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-green {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .card-blue {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .card-orange {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .card-purple {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .card-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .card-description {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .feature-list {
+            display: grid;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #2a5298;
+        }
+
+        .feature-icon {
+            font-size: 2em;
+            min-width: 50px;
+        }
+
+        .feature-content h4 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .feature-content p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+            margin: 30px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .timeline-marker {
+            min-width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .timeline-content h4 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .timeline-content p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .benefit-card {
+            text-align: center;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid #2a5298;
+        }
+
+        .benefit-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .benefit-title {
+            color: #1e3c72;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .benefit-description {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+        }
+
+        .info-box h4 {
+            color: #1565c0;
+            margin-bottom: 15px;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-box li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #424242;
+            line-height: 1.6;
+        }
+
+        .info-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #2196f3;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #ff9800;
+            margin: 20px 0;
+        }
+
+        .warning-box h4 {
+            color: #e65100;
+            margin-bottom: 15px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .stat-value {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background: #f5f5f5;
+        }
+
+        .nav-btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-indicator {
+            font-size: 1em;
+            color: #666;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #424242;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .highlight {
+            background: #fff59d;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .process-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .process-step {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            min-width: 150px;
+        }
+
+        .process-step:not(:last-child):after {
+            content: "→";
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2em;
+            color: #2a5298;
+        }
+
+        .process-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .process-title {
+            color: #1e3c72;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .process-description {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .alert-success h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+
+        .comparison-table {
+            margin: 30px 0;
+        }
+
+        .comparison-table th:first-child {
+            background: #424242;
+        }
+
+        .comparison-table th:nth-child(2) {
+            background: #e57373;
+        }
+
+        .comparison-table th:nth-child(3) {
+            background: #81c784;
+        }
+
+        .priority-high {
+            color: #c62828;
+            font-weight: bold;
+        }
+
+        .priority-medium {
+            color: #f57c00;
+            font-weight: bold;
+        }
+
+        .priority-low {
+            color: #388e3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Slide 1: Portada -->
+        <div class="slide active">
+            <div class="header" style="border: none; padding-top: 80px;">
+                <div class="logo">🏥</div>
+                <h1>Sistema de Inventario Digital</h1>
+                <h2 style="border: none;">Hospital Tierra y Libertad</h2>
+                <div class="subtitle">Kick-Off del Proyecto</div>
+                <div class="subtitle" style="margin-top: 20px; font-size: 1em; color: #888;">Noviembre 2025</div>
+            </div>
+
+            <div class="stats-container" style="margin-top: 80px;">
+                <div class="stat-box">
+                    <div class="stat-label">Bienes Registrados</div>
+                    <div class="stat-value">5,172</div>
+                    <div class="stat-label">Al 30 de Sep 2025</div>
+                </div>
+                <div class="stat-box" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                    <div class="stat-label">Valor Total</div>
+                    <div class="stat-value">$179.4M</div>
+                    <div class="stat-label">MXN</div>
+                </div>
+                <div class="stat-box" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="stat-label">Ubicaciones</div>
+                    <div class="stat-value">28</div>
+                    <div class="stat-label">Áreas del hospital</div>
+                </div>
+                <div class="stat-box" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <div class="stat-label">Responsables</div>
+                    <div class="stat-value">27</div>
+                    <div class="stat-label">Usuarios activos</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Contexto Actual del Hospital -->
+        <div class="slide">
+            <h2>📊 Panorama Actual - Hospital Tierra y Libertad</h2>
+            
+            <div class="alert-success">
+                <h4>✅ Inventario Base Registrado</h4>
+                <p><strong>5,172 bienes muebles</strong> con valor de <strong>$179,392,608 MXN</strong> registrados al 30 de septiembre 2025</p>
+            </div>
+
+            <h3>Características del Inventario Actual</h3>
+            <div class="grid">
+                <div class="card card-green">
+                    <div class="card-title">Códigos de Barras</div>
+                    <div class="card-value">100%</div>
+                    <div class="card-description">Todos los bienes tienen código de barras asignado</div>
+                </div>
+                <div class="card card-blue">
+                    <div class="card-title">Estado General</div>
+                    <div class="card-value">96.2%</div>
+                    <div class="card-description">Bienes en buenas condiciones</div>
+                </div>
+                <div class="card card-orange">
+                    <div class="card-title">Años Principales</div>
+                    <div class="card-value">2020-21</div>
+                    <div class="card-description">78% de bienes dados de alta en estos años</div>
+                </div>
+                <div class="card card-purple">
+                    <div class="card-title">Categorías CABMS</div>
+                    <div class="card-value">279</div>
+                    <div class="card-description">Diferentes tipos de bienes</div>
+                </div>
+            </div>
+
+            <h3>Distribución de Condiciones</h3>
+            <table>
+                <tr>
+                    <th>Condición</th>
+                    <th>Cantidad</th>
+                    <th>Porcentaje</th>
+                    <th>Valor (MXN)</th>
+                </tr>
+                <tr>
+                    <td><span style="color: #4caf50;">●</span> Bueno</td>
+                    <td>4,977 bienes</td>
+                    <td>96.2%</td>
+                    <td>$172.6M aprox.</td>
+                </tr>
+                <tr>
+                    <td><span style="color: #ff9800;">●</span> Regular</td>
+                    <td>2 bienes</td>
+                    <td>0.04%</td>
+                    <td>$69K aprox.</td>
+                </tr>
+                <tr>
+                    <td><span style="color: #f44336;">●</span> Malo</td>
+                    <td>144 bienes</td>
+                    <td>2.8%</td>
+                    <td>$5.0M aprox.</td>
+                </tr>
+                <tr>
+                    <td><span style="color: #9e9e9e;">●</span> No Encontrado</td>
+                    <td>49 bienes</td>
+                    <td>0.9%</td>
+                    <td>$1.7M aprox.</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Slide 3: Áreas de Oportunidad -->
+        <div class="slide">
+            <h2>🎯 Áreas de Oportunidad Identificadas</h2>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-icon">📋</div>
+                    <div class="feature-content">
+                        <h4>Control de Inventario Manual</h4>
+                        <p>Los procesos actuales requieren intervención manual constante, aumentando el tiempo de respuesta y la posibilidad de errores en el registro y seguimiento de bienes.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">📸</div>
+                    <div class="feature-content">
+                        <h4>Ausencia de Registro Fotográfico</h4>
+                        <p>No existe evidencia visual del estado de los bienes, dificultando la verificación de condiciones y la documentación para auditorías o reclamaciones.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">📍</div>
+                    <div class="feature-content">
+                        <h4>Falta de Geolocalización</h4>
+                        <p>No hay registro automático de la ubicación exacta de los bienes, complicando su localización física y el seguimiento de movimientos entre áreas.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-content">
+                        <h4>Ausencia de Herramientas Móviles</h4>
+                        <p>Los procesos de inventario requieren equipos de cómputo, limitando la agilidad del personal de campo para realizar verificaciones en tiempo real.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-content">
+                        <h4>Reportes y Análisis Limitados</h4>
+                        <p>La generación de reportes ejecutivos y análisis de tendencias requiere procesos manuales extensos, retrasando la toma de decisiones informadas.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-content">
+                        <h4>Seguimiento de Transferencias</h4>
+                        <p>No existe un sistema automatizado para rastrear el movimiento de bienes entre ubicaciones y responsables, dificultando la rendición de cuentas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>💡 Oportunidad de Transformación Digital</h4>
+                <ul>
+                    <li><strong>Base sólida:</strong> 100% de bienes con códigos de barras facilita la implementación</li>
+                    <li><strong>Inventario actualizado:</strong> Datos recientes (Sep 2025) reducen esfuerzo inicial</li>
+                    <li><strong>Estado favorable:</strong> 96% de bienes en buenas condiciones</li>
+                    <li><strong>Infraestructura lista:</strong> Ubicaciones y responsables bien definidos</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4: Solución Propuesta -->
+        <div class="slide">
+            <h2>💡 Solución: Sistema de Inventario Digital</h2>
+
+            <h3>Componentes del Sistema</h3>
+            <div class="process-flow">
+                <div class="process-step">
+                    <div class="process-icon">📱</div>
+                    <div class="process-title">App Móvil</div>
+                    <div class="process-description">Escaneo, fotografía y geolocalización en campo</div>
+                </div>
+                <div class="process-step">
+                    <div class="process-icon">💻</div>
+                    <div class="process-title">Plataforma Web</div>
+                    <div class="process-description">Gestión centralizada y reportes ejecutivos</div>
+                </div>
+                <div class="process-step">
+                    <div class="process-icon">☁️</div>
+                    <div class="process-title">Nube Segura</div>
+                    <div class="process-description">Almacenamiento y sincronización automática</div>
+                </div>
+                <div class="process-step">
+                    <div class="process-icon">📊</div>
+                    <div class="process-title">Analytics</div>
+                    <div class="process-description">Dashboards y análisis en tiempo real</div>
+                </div>
+            </div>
+
+            <h3>Características Principales</h3>
+            <div class="grid">
+                <div class="card card-blue">
+                    <div class="card-title">🏷️ Escaneo de Códigos</div>
+                    <div class="card-description">Lectura rápida con escáner SEUIC AUTOID Q9 y validación automática</div>
+                </div>
+                <div class="card card-green">
+                    <div class="card-title">📸 Registro Fotográfico</div>
+                    <div class="card-description">Captura automática de fotografías con metadatos completos</div>
+                </div>
+                <div class="card card-orange">
+                    <div class="card-title">📍 Geolocalización GPS</div>
+                    <div class="card-description">Registro automático de ubicación exacta con precisión en metros</div>
+                </div>
+                <div class="card card-purple">
+                    <div class="card-title">☁️ Sincronización Cloud</div>
+                    <div class="card-description">Operación offline con sincronización automática</div>
+                </div>
+                <div class="card card-blue">
+                    <div class="card-title">📝 Histórico Digital</div>
+                    <div class="card-description">Registro completo de todas las verificaciones con evidencia</div>
+                </div>
+                <div class="card card-green">
+                    <div class="card-title">👥 Control Operativo</div>
+                    <div class="card-description">Seguimiento de responsables y ubicaciones en tiempo real</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 40px;">Flujo de Trabajo Diario</h3>
+            <div class="info-box">
+                <h4>📋 Proceso de Verificación</h4>
+                <ol style="margin-top: 10px; padding-left: 20px;">
+                    <li><strong>Personal de campo accede al área</strong> según cronograma coordinado</li>
+                    <li><strong>Escanea el código de barras</strong> del bien con el dispositivo SEUIC AUTOID Q9</li>
+                    <li><strong>Sistema muestra información</strong> del bien (descripción, ubicación esperada, responsable)</li>
+                    <li><strong>Captura 2+ fotografías</strong> del bien desde diferentes ángulos</li>
+                    <li><strong>GPS registra automáticamente</strong> la ubicación exacta</li>
+                    <li><strong>Valida o actualiza</strong> estado (encontrado/no encontrado) y condición (bueno/regular/malo)</li>
+                    <li><strong>Confirma o corrige</strong> ubicación y responsable actual</li>
+                    <li><strong>Agrega observaciones</strong> si es necesario</li>
+                    <li><strong>Sincroniza datos</strong> con la nube (inmediatamente si hay conexión, después si está offline)</li>
+                    <li><strong>Dashboard se actualiza</strong> en tiempo real con el nuevo registro</li>
+                </ol>
+            </div>
+
+            <div class="info-box" style="margin-top: 20px;">
+                <h4>✨ Ventaja Competitiva de Tierra y Libertad</h4>
+                <p><strong>El Hospital Tierra y Libertad ya cuenta con el 100% de sus bienes etiquetados con códigos de barras,</strong> lo que facilita enormemente la implementación del sistema digital y reduce significativamente los tiempos de adopción.</p>
+            </div>
+
+            <div class="warning-box" style="margin-top: 20px; background: #e3f2fd; border-left: 5px solid #2196f3;">
+                <h4 style="color: #1565c0;">🔗 Enlace con Sistema COAF</h4>
+                <p style="color: #424242;">El sistema de inventario proporciona la <strong>evidencia fotográfica, GPS y documentación</strong> que puede alimentar los procesos oficiales del sistema COAF para Altas, Bajas y Transferencias. El sistema de inventario se enfoca en la operación y control, mientras COAF ejecuta las transacciones oficiales.</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Demostración de la App Móvil -->
+        <div class="slide">
+            <h2>📱 Aplicación Móvil - Interfaz y Funcionalidades</h2>
+
+            <h3>Dashboard Principal de la App</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-content">
+                        <h4>Resumen del Inventario en Tiempo Real</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li><strong>Total de bienes:</strong> Vista consolidada del inventario</li>
+                            <li><strong>Encontrados:</strong> Bienes verificados con evidencia</li>
+                            <li><strong>Pendientes:</strong> Bienes por verificar</li>
+                            <li><strong>No encontrados:</strong> Alertas de bienes sin localizar</li>
+                            <li><strong>Progreso visual:</strong> Barra de avance con porcentaje</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">👤</div>
+                    <div class="feature-content">
+                        <h4>Vista por Usuario/Responsable</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li><strong>Filtrado individual:</strong> Cada responsable ve solo sus bienes asignados</li>
+                            <li><strong>Estadísticas personales:</strong> Total, encontrados, pendientes por persona</li>
+                            <li><strong>Progreso individual:</strong> Porcentaje de avance personalizado</li>
+                            <li><strong>Lista detallada:</strong> Todos los bienes bajo su responsabilidad</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-content">
+                        <h4>Búsqueda y Filtros</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li><strong>Búsqueda inteligente:</strong> Por código, descripción, marca, modelo</li>
+                            <li><strong>Filtros múltiples:</strong> Por estado, ubicación, responsable, condición</li>
+                            <li><strong>Resultados paginados:</strong> Navegación eficiente de grandes cantidades</li>
+                            <li><strong>Vista de tarjetas:</strong> Información resumida con foto miniatura</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 40px;">Ejemplo: Detalle de un Bien Verificado</h3>
+            <div class="info-box">
+                <h4>📋 Información Completa del Bien</h4>
+                <table style="margin-top: 15px;">
+                    <tr>
+                        <td><strong>Código de Barras</strong></td>
+                        <td>Lectura automática con escáner SEUIC AUTOID Q9</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Descripción</strong></td>
+                        <td>Descripción completa del bien (marca, modelo, características)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ubicación Actual</strong></td>
+                        <td>Código de ubicación + nombre del área</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Estado de Verificación</strong></td>
+                        <td>Encontrado / Pendiente / No Encontrado</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Condición del Bien</strong></td>
+                        <td>Bueno / Regular / Malo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fotos Capturadas</strong></td>
+                        <td>Galería con 2+ fotografías del bien</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Coordenadas GPS</strong></td>
+                        <td>Ubicación geográfica exacta con precisión en metros</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fecha y Hora</strong></td>
+                        <td>Timestamp completo de la verificación</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Usuario</strong></td>
+                        <td>Quién realizó la verificación</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Método</strong></td>
+                        <td>Escaneo de código de barras / Búsqueda manual / Cámara</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3 style="margin-top: 40px;">Proceso de Verificación en la App</h3>
+            <div class="process-flow">
+                <div class="process-step">
+                    <div class="process-icon">📱</div>
+                    <div class="process-title">1. Escanear</div>
+                    <div class="process-description">Código de barras con escáner SEUIC</div>
+                </div>
+                <div class="process-step">
+                    <div class="process-icon">📸</div>
+                    <div class="process-title">2. Fotografiar</div>
+                    <div class="process-description">Captura de 2+ imágenes del bien</div>
+                </div>
+                <div class="process-step">
+                    <div class="process-icon">📍</div>
+                    <div class="process-title">3. Geolocalizar</div>
+                    <div class="process-description">GPS automático con precisión</div>
+                </div>
+                <div class="process-step">
+                    <div class="process-icon">✅</div>
+                    <div class="process-title">4. Validar</div>
+                    <div class="process-description">Confirmar estado y condición</div>
+                </div>
+                <div class="process-step">
+                    <div class="process-icon">☁️</div>
+                    <div class="process-title">5. Sincronizar</div>
+                    <div class="process-description">Subida automática a la nube</div>
+                </div>
+            </div>
+
+            <div class="alert-success" style="margin-top: 40px;">
+                <h4>✨ Características Clave de la App</h4>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li><strong>Operación offline:</strong> Funciona sin conexión a internet, sincroniza después</li>
+                    <li><strong>Interfaz intuitiva:</strong> Diseño simple y claro para uso en campo</li>
+                    <li><strong>Evidencia automática:</strong> GPS, timestamp y fotos sin intervención manual</li>
+                    <li><strong>Validación en tiempo real:</strong> Verifica ubicación esperada vs actual</li>
+                    <li><strong>Historial completo:</strong> Registro de todas las verificaciones del bien</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 6: Módulos del Sistema -->
+        <div class="slide">
+            <h2>🔧 Módulos Funcionales del Sistema</h2>
+
+            <div class="info-box" style="margin-bottom: 30px;">
+                <h4>🎯 Enfoque del Sistema</h4>
+                <p><strong>El sistema está diseñado para la operación diaria y control de inventario:</strong></p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>✅ Registro de evidencia fotográfica y GPS</li>
+                    <li>✅ Rastreo y trazabilidad completa de bienes</li>
+                    <li>✅ Control operativo de ubicaciones y responsables</li>
+                    <li>✅ Generación de reportes ejecutivos</li>
+                    <li>🔗 <strong>Se puede enlazar con el proceso COAF</strong> para Altas, Bajas y Transferencias oficiales</li>
+                </ul>
+            </div>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-icon">📲</div>
+                    <div class="feature-content">
+                        <h4>1. Inventario Móvil (Módulo Principal)</h4>
+                        <p><strong>Funcionalidades:</strong></p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Escaneo rápido de códigos de barras con SEUIC AUTOID Q9</li>
+                            <li>Captura fotográfica obligatoria de cada bien (2+ fotos)</li>
+                            <li>Registro automático de GPS con timestamp</li>
+                            <li>Validación de responsable y ubicación actual</li>
+                            <li>Registro del estado y condición del bien</li>
+                            <li>Operación 100% offline con sincronización posterior</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-content">
+                        <h4>2. Reportes y Análisis</h4>
+                        <p><strong>Dashboards ejecutivos:</strong></p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Estado de inventario en tiempo real</li>
+                            <li>Bienes por ubicación, responsable y condición</li>
+                            <li>Análisis de valor y concentración de riesgos</li>
+                            <li>Reportes de cumplimiento para auditorías</li>
+                            <li>Exportación a Excel y PDF</li>
+                            <li>Histórico de verificaciones con evidencia</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">👥</div>
+                    <div class="feature-content">
+                        <h4>3. Control de Responsables y Ubicaciones</h4>
+                        <p><strong>Gestión operativa:</strong></p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Asignación y seguimiento de responsables</li>
+                            <li>Histórico completo de custodios por bien</li>
+                            <li>Control de ubicaciones físicas</li>
+                            <li>Validación automática: ubicación esperada vs actual</li>
+                            <li>Alertas de bienes fuera de ubicación</li>
+                            <li>Trazabilidad completa de movimientos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-content">
+                        <h4>4. Búsqueda y Consulta</h4>
+                        <p><strong>Acceso a información:</strong></p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Búsqueda por código, descripción, marca, modelo</li>
+                            <li>Filtros múltiples: estado, ubicación, responsable, condición</li>
+                            <li>Vista detallada del bien con historial completo</li>
+                            <li>Galería fotográfica con todas las evidencias</li>
+                            <li>Consulta de bienes por usuario/responsable</li>
+                            <li>Listado de bienes "No Encontrados" para seguimiento</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">📝</div>
+                    <div class="feature-content">
+                        <h4>5. Registro de Evidencias</h4>
+                        <p><strong>Documentación completa:</strong></p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Fotografías con metadatos (fecha, hora, GPS, usuario)</li>
+                            <li>Historial de todas las verificaciones del bien</li>
+                            <li>Observaciones y notas por verificación</li>
+                            <li>Registro de cambios de estado y condición</li>
+                            <li>Documentación para auditorías y fiscalización</li>
+                            <li>Expediente digital completo de cada bien</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">🔐</div>
+                    <div class="feature-content">
+                        <h4>6. Control de Accesos y Auditoría</h4>
+                        <p><strong>Seguridad y trazabilidad:</strong></p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Roles diferenciados: Administrador, Supervisor, Capturista</li>
+                            <li>Permisos por módulo y ubicación</li>
+                            <li>Registro de auditoría de todas las operaciones</li>
+                            <li>Autenticación segura con credenciales únicas</li>
+                            <li>Trazabilidad completa: quién hizo qué y cuándo</li>
+                            <li>Bitácora inmutable de acciones</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box" style="margin-top: 30px; background: #e3f2fd; border-left: 5px solid #2196f3;">
+                <h4 style="color: #1565c0;">🔗 Enlace con Sistema COAF</h4>
+                <p style="color: #424242;"><strong>El sistema de inventario proporciona la evidencia y documentación necesaria para procesos oficiales:</strong></p>
+                <ul style="margin-top: 10px; padding-left: 20px; color: #424242;">
+                    <li><strong>Altas:</strong> Evidencia fotográfica y GPS del bien nuevo para alimentar COAF</li>
+                    <li><strong>Bajas:</strong> Documentación del estado del bien (fotos, condición) para justificar baja en COAF</li>
+                    <li><strong>Transferencias:</strong> Registro de cambio de ubicación/responsable como soporte para movimiento en COAF</li>
+                </ul>
+                <p style="margin-top: 15px; color: #424242;"><strong>Nota:</strong> Las transacciones oficiales se ejecutan en el sistema COAF. El sistema de inventario proporciona la evidencia, rastreo y documentación que respalda esas transacciones.</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Plan de Implementación -->
+        <div class="slide">
+            <h2>📅 Plan de Implementación - 4 SEMANAS (1 MES)</h2>
+
+            <div class="warning-box">
+                <h4>⚠️ TIMELINE CRÍTICO</h4>
+                <p><strong>Plazo máximo: 1 MES para verificar 100% de los 5,172 bienes con evidencia fotográfica</strong></p>
+                <p>Es indispensable contar con cronograma detallado de accesos, ubicaciones, responsables, horarios y permisos desde la SEMANA 1.</p>
+            </div>
+
+            <div class="info-box" style="margin-bottom: 30px;">
+                <h4>🎯 Alcance: Verificación Total</h4>
+                <p><strong>NO se permiten muestreos. El objetivo es revisar el 100% de los bienes.</strong></p>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li><strong>Primera Etapa:</strong> Verificación completa de todos los bienes (5,172 unidades)</li>
+                    <li><strong>Segunda Etapa:</strong> Búsqueda programada focalizada de bienes no encontrados en primera pasada</li>
+                    <li><strong>Meta final:</strong> 100% de bienes con registro fotográfico y GPS</li>
+                </ul>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker">S1</div>
+                    <div class="timeline-content">
+                        <h4>Semana 1: Preparación URGENTE</h4>
+                        <p><strong>CRÍTICO - Sin esta información NO se puede avanzar</strong></p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>✅ <strong>INDISPENSABLE:</strong> Cronograma completo de accesos por ubicación</li>
+                            <li>✅ <strong>INDISPENSABLE:</strong> Listado de responsables y contactos directos</li>
+                            <li>✅ <strong>INDISPENSABLE:</strong> Horarios disponibles por área</li>
+                            <li>✅ <strong>INDISPENSABLE:</strong> Permisos de acceso gestionados</li>
+                            <li>Configuración del sistema e instalación de app móvil</li>
+                            <li>Capacitación express al equipo (1 día)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">S2</div>
+                    <div class="timeline-content">
+                        <h4>Semana 2: Primera Etapa - Verificación Masiva Parte 1</h4>
+                        <p><strong>Meta: ~2,000 bienes verificados (38% del total)</strong></p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li><strong>Ubicaciones según cronograma - Verificación 100%:</strong></li>
+                            <li>• Quirófano: 134 bienes (TODOS)</li>
+                            <li>• Laboratorio: 128 bienes (TODOS)</li>
+                            <li>• Consulta Externa: 255 bienes (TODOS)</li>
+                            <li>• Enfermería: 204 bienes (TODOS)</li>
+                            <li>• Subdirección: 410 bienes (TODOS)</li>
+                            <li>• Otras ubicaciones según disponibilidad de acceso</li>
+                            <li><strong>Proceso:</strong> Escanear, fotografiar, geolocalizar cada bien</li>
+                            <li><strong>Bienes no encontrados:</strong> Marcar para segunda etapa de búsqueda</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">S3</div>
+                    <div class="timeline-content">
+                        <h4>Semana 3: Primera Etapa - Verificación Masiva Parte 2</h4>
+                        <p><strong>Meta: ~2,500 bienes adicionales (86% acumulado)</strong></p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li><strong>Continuar ubicaciones - Verificación 100%:</strong></li>
+                            <li>• Bienes Muebles: 882 bienes (TODOS)</li>
+                            <li>• Hospital General: 878 bienes (TODOS)</li>
+                            <li>• Seguridad: 851 bienes (TODOS)</li>
+                            <li>• Sistemas: 284 bienes (TODOS)</li>
+                            <li>• Mantenimiento: 241 bienes (TODOS)</li>
+                            <li>• Completar ubicaciones restantes</li>
+                            <li><strong>Marcar bienes no encontrados</strong> para búsqueda focalizada</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">S4</div>
+                    <div class="timeline-content">
+                        <h4>Semana 4: Completar + Segunda Etapa de Búsqueda</h4>
+                        <p><strong>Meta: 100% completado + búsqueda focalizada</strong></p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li><strong>Completar ubicaciones pendientes</strong> (~700 bienes restantes - TODOS)</li>
+                            <li><strong>Segunda Etapa - Búsqueda Programada:</strong></li>
+                            <li>• Listado de bienes no encontrados en primera pasada</li>
+                            <li>• Coordinación con responsables para búsqueda focalizada</li>
+                            <li>• Revisión de áreas alternativas y almacenes</li>
+                            <li>• Consulta con personal sobre posibles ubicaciones</li>
+                            <li>• Actualización de estado: Encontrado tardío / No localizado</li>
+                            <li><strong>Validación exhaustiva de datos</strong></li>
+                            <li><strong>Generación de reportes ejecutivos finales</strong></li>
+                            <li><strong>Viernes:</strong> Presentación de resultados y entrega formal</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert-success">
+                <h4>🎯 Entregables al Finalizar Semana 4</h4>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li><strong>5,172 bienes revisados al 100%</strong> (TODOS, sin excepciones)</li>
+                    <li><strong>Encontrados:</strong> Con foto, GPS y validación completa</li>
+                    <li><strong>No encontrados:</strong> Con registro de búsqueda focalizada en segunda etapa</li>
+                    <li><strong>Ubicaciones y responsables validados</strong></li>
+                    <li><strong>Reportes ejecutivos:</strong> Estado final del inventario con evidencia</li>
+                </ul>
+            </div>
+
+            <div class="info-box" style="margin-top: 30px;">
+                <h4>👥 Equipo Requerido</h4>
+                <ul>
+                    <li><strong>Semana 1:</strong> 2 personas (preparación)</li>
+                    <li><strong>Semanas 2-3:</strong> 6-8 personas (verificación masiva 100%)</li>
+                    <li><strong>Semana 4:</strong> 4-6 personas (completar + búsqueda focalizada)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 7: Proceso de Verificación -->
+        <div class="slide">
+            <h2>📋 Proceso de Verificación - 100% de los Bienes</h2>
+
+            <div class="alert-success" style="margin-bottom: 30px;">
+                <h4>🎯 Compromiso de Verificación Total</h4>
+                <p><strong>El proyecto NO utiliza muestreos. Se revisará el 100% de los 5,172 bienes del hospital.</strong></p>
+                <p>Todos los bienes serán escaneados, fotografiados y geolocalizados sin excepciones.</p>
+            </div>
+
+            <h3>Primera Etapa: Verificación Masiva (Semanas 2-3)</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-content">
+                        <h4>Objetivo: Verificar TODOS los bienes</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li><strong>Alcance:</strong> 5,172 bienes (100%, sin muestreos)</li>
+                            <li><strong>Método:</strong> Recorrido sistemático por las 28 ubicaciones</li>
+                            <li><strong>Orden:</strong> Según cronograma de accesos coordinado</li>
+                            <li><strong>Proceso por bien:</strong></li>
+                            <li style="padding-left: 20px;">1. Escanear código de barras con SEUIC AUTOID Q9</li>
+                            <li style="padding-left: 20px;">2. Capturar 2+ fotografías del bien</li>
+                            <li style="padding-left: 20px;">3. Registrar GPS automáticamente</li>
+                            <li style="padding-left: 20px;">4. Validar ubicación y responsable</li>
+                            <li style="padding-left: 20px;">5. Actualizar estado y condición</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">✅</div>
+                    <div class="feature-content">
+                        <h4>Resultados de Primera Etapa</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li><strong>Bienes encontrados:</strong> Registro completo con foto, GPS y validación</li>
+                            <li><strong>Bienes no encontrados:</strong> Marcados para segunda etapa</li>
+                            <li><strong>Bienes dispersos:</strong> Marcados para segunda etapa</li>
+                            <li><strong>Inconsistencias:</strong> Documentadas para corrección</li>
+                            <li><strong>Estimado de encontrados:</strong> ~90-95% en primera pasada</li>
+                            <li><strong>Para segunda etapa:</strong> ~5-10% requieren búsqueda focalizada</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 40px;">Segunda Etapa: Búsqueda Programada (Semana 4)</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-icon">🔎</div>
+                    <div class="feature-content">
+                        <h4>Búsqueda Focalizada de Bienes No Encontrados</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li><strong>Listado específico:</strong> Bienes marcados como "no encontrados" en primera pasada</li>
+                            <li><strong>Coordinación con responsables:</strong> Consulta directa sobre posibles ubicaciones</li>
+                            <li><strong>Revisión de áreas alternativas:</strong></li>
+                            <li style="padding-left: 20px;">• Almacenes y bodegas</li>
+                            <li style="padding-left: 20px;">• Áreas de mantenimiento</li>
+                            <li style="padding-left: 20px;">• Espacios en desuso</li>
+                            <li style="padding-left: 20px;">• Ubicaciones reportadas por personal</li>
+                            <li><strong>Investigación con personal clave:</strong> Entrevistas sobre el último paradero conocido</li>
+                            <li><strong>Actualización de estatus:</strong></li>
+                            <li style="padding-left: 20px;">• Encontrado tardío → Registro completo</li>
+                            <li style="padding-left: 20px;">• No localizado → Documentación de búsqueda realizada</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-content">
+                        <h4>Entregables de Segunda Etapa</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li><strong>Reporte de bienes encontrados tardíamente:</strong> Con evidencia fotográfica y GPS</li>
+                            <li><strong>Reporte de bienes no localizados:</strong> Con documentación de búsqueda realizada</li>
+                            <li><strong>Análisis de causas:</strong> Por qué no se encontraron</li>
+                            <li><strong>Recomendaciones:</strong> Acciones sugeridas (baja, búsqueda extendida, etc.)</li>
+                            <li><strong>Estadísticas finales:</strong> % encontrados vs no encontrados</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 40px;">Flujo del Proceso</h3>
+            <div class="process-flow">
+                <div class="process-step">
+                    <div class="process-icon">📍</div>
+                    <div class="process-title">Ubicación</div>
+                    <div class="process-description">Acceso según cronograma</div>
+                </div>
+                <div class="process-step">
+                    <div class="process-icon">🔍</div>
+                    <div class="process-title">Verificar</div>
+                    <div class="process-description">Escanear TODOS los bienes</div>
+                </div>
+                <div class="process-step">
+                    <div class="process-icon">📸</div>
+                    <div class="process-title">Documentar</div>
+                    <div class="process-description">Foto + GPS de cada uno</div>
+                </div>
+                <div class="process-step">
+                    <div class="process-icon">❓</div>
+                    <div class="process-title">No encontrados</div>
+                    <div class="process-description">Marcar para etapa 2</div>
+                </div>
+                <div class="process-step">
+                    <div class="process-icon">🔎</div>
+                    <div class="process-title">Búsqueda</div>
+                    <div class="process-description">Localización focalizada</div>
+                </div>
+            </div>
+
+            <div class="info-box" style="margin-top: 30px;">
+                <h4>💡 Tiempo Estimado</h4>
+                <table style="margin-top: 15px;">
+                    <tr>
+                        <th>Actividad</th>
+                        <th>Tiempo por Bien</th>
+                        <th>Total (5,172 bienes)</th>
+                    </tr>
+                    <tr>
+                        <td>Escanear código</td>
+                        <td>5-10 segundos</td>
+                        <td>~7-14 horas</td>
+                    </tr>
+                    <tr>
+                        <td>Capturar fotos (2)</td>
+                        <td>20-30 segundos</td>
+                        <td>~29-43 horas</td>
+                    </tr>
+                    <tr>
+                        <td>Validar datos</td>
+                        <td>10-15 segundos</td>
+                        <td>~14-22 horas</td>
+                    </tr>
+                    <tr>
+                        <td>Desplazamiento</td>
+                        <td>15-20 segundos</td>
+                        <td>~22-29 horas</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total estimado</strong></td>
+                        <td><strong>~1 minuto/bien</strong></td>
+                        <td><strong>~86 horas netas</strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="text-align: center; background: #e3f2fd;">
+                            <strong>Con equipo de 6-8 personas = 10-14 horas efectivas por persona</strong><br>
+                            Distribuido en 2 semanas (10 días) = <strong>1-1.5 horas por día por persona</strong>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="alert-success" style="margin-top: 30px;">
+                <h4>✅ Garantía de Cobertura Total</h4>
+                <p><strong>El proyecto garantiza que TODOS los 5,172 bienes serán revisados.</strong> No hay muestreos ni verificaciones parciales. Cada bien tendrá su registro fotográfico, GPS y validación completa, o en su defecto, documentación exhaustiva de la búsqueda realizada en segunda etapa.</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Beneficios Esperados -->
+        <div class="slide">
+            <h2>✨ Beneficios del Sistema Digital</h2>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <div class="benefit-title">Reducción de Tiempo</div>
+                    <div class="benefit-description">De 30+ días a 10-15 días para inventario completo</div>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">📸</div>
+                    <div class="benefit-title">Evidencia Visual</div>
+                    <div class="benefit-description">Registro fotográfico completo de todos los bienes</div>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">📍</div>
+                    <div class="benefit-title">Geolocalización</div>
+                    <div class="benefit-description">Ubicación exacta con GPS de cada activo</div>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔄</div>
+                    <div class="benefit-title">Tiempo Real</div>
+                    <div class="benefit-description">Información actualizada instantáneamente</div>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">👥</div>
+                    <div class="benefit-title">Responsabilidad Clara</div>
+                    <div class="benefit-description">Trazabilidad completa de custodios</div>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">📊</div>
+                    <div class="benefit-title">Reportes Automáticos</div>
+                    <div class="benefit-description">Dashboards ejecutivos sin esfuerzo manual</div>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔐</div>
+                    <div class="benefit-title">Auditoría Digital</div>
+                    <div class="benefit-description">Expediente completo para fiscalización</div>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">💰</div>
+                    <div class="benefit-title">Control de Valor</div>
+                    <div class="benefit-description">Seguimiento preciso de $179M en activos</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 50px;">Impacto Operativo Mensurable</h3>
+            <table>
+                <tr>
+                    <th>Métrica</th>
+                    <th>Situación Actual</th>
+                    <th>Con Sistema Digital</th>
+                    <th>Mejora</th>
+                </tr>
+                <tr>
+                    <td>Tiempo de inventario completo</td>
+                    <td>30+ días</td>
+                    <td>10-15 días</td>
+                    <td class="priority-high">↓ 50-66%</td>
+                </tr>
+                <tr>
+                    <td>Personal requerido</td>
+                    <td>5-6 personas</td>
+                    <td>2-3 personas</td>
+                    <td class="priority-high">↓ 50%</td>
+                </tr>
+                <tr>
+                    <td>Tiempo de localización de bien</td>
+                    <td>15-30 minutos</td>
+                    <td>1-2 minutos</td>
+                    <td class="priority-high">↓ 93%</td>
+                </tr>
+                <tr>
+                    <td>Evidencia fotográfica</td>
+                    <td>0%</td>
+                    <td>100%</td>
+                    <td class="priority-high">Nuevo</td>
+                </tr>
+                <tr>
+                    <td>Tiempo para generar reporte</td>
+                    <td>2-3 días</td>
+                    <td>5 minutos</td>
+                    <td class="priority-high">↓ 99%</td>
+                </tr>
+                <tr>
+                    <td>Precisión de datos</td>
+                    <td>~85%</td>
+                    <td>~98%</td>
+                    <td class="priority-medium">↑ 15%</td>
+                </tr>
+            </table>
+
+            <div class="alert-success" style="margin-top: 30px;">
+                <h4>🎯 ROI Esperado</h4>
+                <p>La reducción en tiempo del personal (50%) y la mejora en eficiencia operativa pueden generar ahorros de <strong>$500K - $750K MXN anuales</strong> considerando solo los costos directos de personal en procesos de inventario.</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Top Ubicaciones y Responsables -->
+        <div class="slide">
+            <h2>📊 Distribución Actual de Bienes</h2>
+
+            <h3>Top 10 Ubicaciones por Cantidad de Bienes</h3>
+            <table>
+                <tr>
+                    <th>Ubicación</th>
+                    <th>Cantidad</th>
+                    <th>% del Total</th>
+                    <th>Prioridad</th>
+                </tr>
+                <tr>
+                    <td>2120440 - Bienes Muebles</td>
+                    <td>882</td>
+                    <td>17.1%</td>
+                    <td class="priority-high">Alta</td>
+                </tr>
+                <tr>
+                    <td>2120000 - Hospital Tierra y Libertad</td>
+                    <td>878</td>
+                    <td>17.0%</td>
+                    <td class="priority-high">Alta</td>
+                </tr>
+                <tr>
+                    <td>2120432 - Seguridad</td>
+                    <td>851</td>
+                    <td>16.5%</td>
+                    <td class="priority-medium">Media</td>
+                </tr>
+                <tr>
+                    <td>2120200 - Subdirección</td>
+                    <td>410</td>
+                    <td>7.9%</td>
+                    <td class="priority-medium">Media</td>
+                </tr>
+                <tr>
+                    <td>2120450 - Sistemas</td>
+                    <td>284</td>
+                    <td>5.5%</td>
+                    <td class="priority-medium">Media</td>
+                </tr>
+                <tr>
+                    <td>2120513 - Consulta Externa</td>
+                    <td>255</td>
+                    <td>4.9%</td>
+                    <td class="priority-high">Alta</td>
+                </tr>
+                <tr>
+                    <td>2120431 - Mantenimiento</td>
+                    <td>241</td>
+                    <td>4.7%</td>
+                    <td class="priority-low">Baja</td>
+                </tr>
+                <tr>
+                    <td>2120514 - Enfermería</td>
+                    <td>204</td>
+                    <td>3.9%</td>
+                    <td class="priority-high">Alta</td>
+                </tr>
+                <tr>
+                    <td>2120512 - Quirófano</td>
+                    <td>134</td>
+                    <td>2.6%</td>
+                    <td class="priority-high">Alta</td>
+                </tr>
+                <tr>
+                    <td>2120511 - Laboratorio</td>
+                    <td>128</td>
+                    <td>2.5%</td>
+                    <td class="priority-high">Alta</td>
+                </tr>
+            </table>
+
+            <h3 style="margin-top: 40px;">Top 10 Responsables por Cantidad de Bienes</h3>
+            <table>
+                <tr>
+                    <th>Responsable</th>
+                    <th>Cantidad</th>
+                    <th>% del Total</th>
+                    <th>Valor Aprox.</th>
+                </tr>
+                <tr>
+                    <td>MACIEL COLLINS IGNACIO</td>
+                    <td>934</td>
+                    <td>18.1%</td>
+                    <td>$32.4M MXN</td>
+                </tr>
+                <tr>
+                    <td>GARCIA RIOS MIGUEL ANGEL</td>
+                    <td>869</td>
+                    <td>16.8%</td>
+                    <td>$30.1M MXN</td>
+                </tr>
+                <tr>
+                    <td>DOMINGUEZ GUERRERO ALAN GERARDO</td>
+                    <td>850</td>
+                    <td>16.4%</td>
+                    <td>$29.5M MXN</td>
+                </tr>
+                <tr>
+                    <td>HARO BRAVO LUIS AURELIO</td>
+                    <td>408</td>
+                    <td>7.9%</td>
+                    <td>$14.2M MXN</td>
+                </tr>
+                <tr>
+                    <td>SANTOS GOMEZ BRYAN SALVADOR</td>
+                    <td>281</td>
+                    <td>5.4%</td>
+                    <td>$9.7M MXN</td>
+                </tr>
+                <tr>
+                    <td>ALVAREZ OVALLE MARTIN JESUS</td>
+                    <td>249</td>
+                    <td>4.8%</td>
+                    <td>$8.6M MXN</td>
+                </tr>
+                <tr>
+                    <td>MENDOZA PEREZ KAREN ZAMIRA</td>
+                    <td>243</td>
+                    <td>4.7%</td>
+                    <td>$8.4M MXN</td>
+                </tr>
+                <tr>
+                    <td>SAENZ LOPEZ JAVIER</td>
+                    <td>241</td>
+                    <td>4.7%</td>
+                    <td>$8.4M MXN</td>
+                </tr>
+                <tr>
+                    <td>DIMAS SANCHEZ GLORIA ESTEPHANY</td>
+                    <td>183</td>
+                    <td>3.5%</td>
+                    <td>$6.3M MXN</td>
+                </tr>
+                <tr>
+                    <td>MARTINEZ GUILLEN NADIA LIZETH</td>
+                    <td>127</td>
+                    <td>2.5%</td>
+                    <td>$4.4M MXN</td>
+                </tr>
+            </table>
+
+            <div class="warning-box" style="margin-top: 30px;">
+                <h4>⚠️ Concentración de Riesgo</h4>
+                <p><strong>Los 3 principales responsables custodian el 51.3% del inventario total</strong> (2,653 bienes con valor ~$92M MXN). Es crítico asegurar la documentación adecuada y el seguimiento detallado de estos resguardos.</p>
+            </div>
+        </div>
+
+        <!-- Slide 10: Información Requerida -->
+        <div class="slide">
+            <h2>📋 Información CRÍTICA Requerida del Hospital</h2>
+
+            <div class="warning-box" style="background: #ffebee; border-left: 5px solid #c62828;">
+                <h4 style="color: #b71c1c;">🚨 REQUISITO INDISPENSABLE - SIN ESTO NO SE PUEDE AVANZAR</h4>
+                <p style="color: #c62828; font-size: 1.2em; font-weight: bold;">Cronograma completo de accesos: ubicaciones, responsables, horarios, permisos y fechas coordinadas. Es IMPOSIBLE completar el inventario en 4 semanas sin esta información en la Semana 1.</p>
+            </div>
+
+            <p style="margin-bottom: 30px; font-size: 1.1em; color: #666;">Para completar el inventario de 5,172 bienes en solo 4 semanas, necesitamos trabajar de forma controlada y coordinada con el hospital:</p>
+
+            <div class="feature-list">
+                <div class="feature-item" style="border-left: 5px solid #c62828; background: #ffebee;">
+                    <div class="feature-icon">📅</div>
+                    <div class="feature-content">
+                        <h4 style="color: #b71c1c;">1. CRONOGRAMA DE ACCESOS (INDISPENSABLE)</h4>
+                        <p><strong>🚨 SIN ESTA INFORMACIÓN NO SE PUEDE INICIAR EL INVENTARIO</strong></p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li><strong>28 ubicaciones:</strong> Calendario con fechas y horarios específicos por área</li>
+                            <li><strong>Responsables:</strong> Nombre y contacto directo de quien autoriza acceso</li>
+                            <li><strong>Horarios disponibles:</strong> Ventanas de tiempo para cada ubicación</li>
+                            <li><strong>Permisos gestionados:</strong> Autorizaciones firmadas para áreas críticas</li>
+                            <li><strong>Restricciones:</strong> Protocolos especiales (quirófano, terapia, etc.)</li>
+                            <li><strong>Coordinación:</strong> Secuencia lógica de verificación por zona</li>
+                        </ul>
+                        <p style="margin-top: 15px; color: #c62828; font-weight: bold;">⏰ Requerido: DÍAS 1-3 DE LA SEMANA 1</p>
+                        <p style="margin-top: 10px; background: white; padding: 15px; border-radius: 5px;">
+                            <strong>Formato necesario:</strong><br>
+                            - Ubicación | Responsable | Contacto | Días disponibles | Horario | Permisos requeridos | Prioridad
+                        </p>
+                    </div>
+                </div>
+
+                <div class="feature-item" style="border-left: 5px solid #d32f2f;">
+                    <div class="feature-icon">👤</div>
+                    <div class="feature-content">
+                        <h4 style="color: #c62828;">2. Designación del Enlace del Proyecto (CRÍTICO)</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Nombre y cargo del enlace principal con poder de decisión</li>
+                            <li>Contacto directo 24/7 (teléfono celular y email)</li>
+                            <li>Autoridad para coordinar accesos con todos los responsables</li>
+                            <li>Personal de apoyo asignado al proyecto (mínimo 2 personas)</li>
+                            <li>Disponibilidad diaria para resolución de imprevistos</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>Prioridad:</strong> <span class="priority-high">CRÍTICA</span> - Requerida HOY</p>
+                    </div>
+                </div>
+
+                <div class="feature-item" style="border-left: 5px solid #f57c00;">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-content">
+                        <h4 style="color: #e65100;">3. Validación de Datos del Inventario</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Confirmar que los 5,172 bienes registrados son correctos</li>
+                            <li>Identificar bienes dados de baja en los últimos 3 meses</li>
+                            <li>Validar bienes pendientes de registro (compras recientes)</li>
+                            <li>Confirmar valor total de $179.4M MXN</li>
+                            <li>Listado de bienes "No Encontrados" a buscar (49 bienes)</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>Prioridad:</strong> <span class="priority-high">ALTA</span> - Requerida Semana 1</p>
+                    </div>
+                </div>
+
+                <div class="feature-item" style="border-left: 5px solid #f57c00;">
+                    <div class="feature-icon">📍</div>
+                    <div class="feature-content">
+                        <h4 style="color: #e65100;">4. Actualización de Ubicaciones</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Confirmar las 28 ubicaciones actuales con nombres reales</li>
+                            <li>Aclarar códigos contables vs nombres de áreas físicas</li>
+                            <li>Identificar ubicaciones que han cambiado de nombre</li>
+                            <li>Proporcionar plano del hospital (aunque sea sketch manual)</li>
+                            <li>Mapeo de cómo llegar a cada ubicación</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>Prioridad:</strong> <span class="priority-high">ALTA</span> - Requerida Semana 1</p>
+                    </div>
+                </div>
+
+                <div class="feature-item" style="border-left: 5px solid #f57c00;">
+                    <div class="feature-icon">👥</div>
+                    <div class="feature-content">
+                        <h4 style="color: #e65100;">5. Validación de Responsables</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Confirmar los 27 usuarios responsables actuales</li>
+                            <li>Identificar responsables que ya no laboran en el hospital</li>
+                            <li>Actualizar puestos, áreas de adscripción y turnos</li>
+                            <li>Proporcionar datos de contacto actualizados (cel y email)</li>
+                            <li>Definir nuevos responsables para bienes sin asignar</li>
+                            <li>Horarios de disponibilidad de cada responsable</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>Prioridad:</strong> <span class="priority-high">ALTA</span> - Requerida Semana 1</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">💻</div>
+                    <div class="feature-content">
+                        <h4>6. Infraestructura Tecnológica</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Dispositivos móviles a utilizar (propios o del hospital)</li>
+                            <li>Confirmar cobertura de red WiFi/4G en todas las áreas</li>
+                            <li>Permisos de acceso a red del hospital si aplica</li>
+                            <li>Políticas de uso de dispositivos en áreas críticas</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>Prioridad:</strong> <span class="priority-medium">MEDIA</span> - Requerida Semana 1</p>
+                    </div>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">🔗</div>
+                    <div class="feature-content">
+                        <h4>7. Información del Sistema COAF</h4>
+                        <p><strong>Para integración de Altas, Bajas y Transferencias:</strong></p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Contacto del administrador del sistema COAF</li>
+                            <li>Especificaciones técnicas de integración (si existen)</li>
+                            <li>Formato de datos requerido por COAF</li>
+                            <li>Flujos de aprobación actuales en COAF</li>
+                            <li>Permisos de acceso para consulta/actualización</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>Prioridad:</strong> <span class="priority-medium">MEDIA</span> - Requerida Semana 2</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert-success" style="margin-top: 30px; background: #fff3e0; border-left: 5px solid #f57c00;">
+                <h4 style="color: #e65100;">⚠️ IMPORTANTE: Trabajo Controlado</h4>
+                <p style="color: #424242;">Para completar 5,172 bienes en solo 4 semanas es <strong>indispensable trabajar de forma controlada y coordinada</strong> con el hospital. El cronograma de accesos es la columna vertebral del proyecto. Sin él, el equipo de campo estará detenido esperando permisos y coordinaciones improvisadas.</p>
+            </div>
+        </div>
+
+        <!-- Slide 11: Próximos Pasos -->
+        <div class="slide">
+            <h2>🚀 Próximos Pasos - Timeline de 4 Semanas</h2>
+
+            <div class="warning-box" style="background: #ffebee; border-left: 5px solid #c62828; margin-bottom: 30px;">
+                <h4 style="color: #b71c1c;">⚠️ PLAZO CRÍTICO: 4 SEMANAS</h4>
+                <p style="color: #c62828; font-weight: bold;">No hay margen de error. Cada día de retraso en la información significa bienes sin verificar. La coordinación debe ser INMEDIATA.</p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker" style="background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%);">HOY</div>
+                    <div class="timeline-content" style="background: #ffebee;">
+                        <h4 style="color: #b71c1c;">Reunión de Kick-Off - DECISIONES INMEDIATAS</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li><strong>✅ ACORDAR:</strong> Designación del enlace del proyecto (hoy mismo)</li>
+                            <li><strong>✅ COMPROMETER:</strong> Entrega de cronograma de accesos en 3 días</li>
+                            <li><strong>✅ DEFINIR:</strong> Listado de responsables y contactos en 3 días</li>
+                            <li><strong>✅ ESTABLECER:</strong> Canal de comunicación 24/7 (WhatsApp/Telegram)</li>
+                            <li><strong>✅ AGENDAR:</strong> Reunión de seguimiento día 4</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker" style="background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);">D1-3</div>
+                    <div class="timeline-content" style="background: #ffebee;">
+                        <h4 style="color: #c62828;">Días 1-3 - Recopilación URGENTE de Información</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li><strong>DÍA 1:</strong> Enlace designado entrega listado completo de responsables</li>
+                            <li><strong>DÍA 2:</strong> Coordinación de accesos con cada responsable</li>
+                            <li><strong>DÍA 3:</strong> Cronograma completo de accesos entregado y validado</li>
+                            <li>Validación de datos del inventario</li>
+                            <li>Aclaración de ubicaciones y códigos</li>
+                            <li><strong>🚨 SIN CRONOGRAMA NO SE PUEDE AVANZAR A SEMANA 2</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">D4-7</div>
+                    <div class="timeline-content">
+                        <h4>Días 4-7 (Resto Semana 1) - Preparación y Arranque</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Configurar usuarios en el sistema (27 responsables)</li>
+                            <li>Instalar app móvil en dispositivos del equipo</li>
+                            <li>Capacitación express al equipo de campo (4 horas)</li>
+                            <li>Migrar datos actualizados al sistema</li>
+                            <li>Preparar materiales y equipos</li>
+                            <li><strong>Inicio de inventario en áreas críticas si cronograma listo</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">S2</div>
+                    <div class="timeline-content">
+                        <h4>Semana 2 - Inventario Intensivo Fase 1 (~2,000 bienes)</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li><strong>Equipo de campo:</strong> 4-6 personas trabajando simultáneamente</li>
+                            <li>Verificación según cronograma: Quirófano, Laboratorio, Consulta Externa, Enfermería, Subdirección</li>
+                            <li>Registro fotográfico + GPS de cada bien</li>
+                            <li>Validación de responsables en sitio</li>
+                            <li>Reunión de seguimiento viernes (reporte de avance)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">S3</div>
+                    <div class="timeline-content">
+                        <h4>Semana 3 - Inventario Intensivo Fase 2 (~2,300 bienes)</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Continuar según cronograma: Seguridad, Sistemas, Mantenimiento, otras ubicaciones</li>
+                            <li>Resolución de casos especiales (bienes no encontrados)</li>
+                            <li>Actualización diaria de avances</li>
+                            <li>Ajustes de coordinación si es necesario</li>
+                            <li>Reunión de seguimiento viernes (reporte de avance)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">S4</div>
+                    <div class="timeline-content">
+                        <h4>Semana 4 - Cierre y Validación (~900 bienes + validación)</h4>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Completar ubicaciones restantes</li>
+                            <li>Validación exhaustiva de datos</li>
+                            <li>Corrección de inconsistencias</li>
+                            <li>Generación de reportes ejecutivos finales</li>
+                            <li><strong>Viernes:</strong> Presentación final de resultados a directivos</li>
+                            <li><strong>Entrega formal:</strong> Sistema 100% operativo</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box" style="margin-top: 40px;">
+                <h4>📝 Compromisos del Hospital</h4>
+                <ul>
+                    <li><strong>HOY:</strong> Designar enlace con poder de decisión y canal de comunicación 24/7</li>
+                    <li><strong>Días 1-3:</strong> Cronograma completo de accesos (INDISPENSABLE)</li>
+                    <li><strong>Días 1-3:</strong> Listado de responsables con contactos actualizados</li>
+                    <li><strong>Semana 1:</strong> Facilitar accesos según cronograma acordado</li>
+                    <li><strong>Semanas 2-4:</strong> Disponibilidad del personal y áreas según cronograma</li>
+                    <li><strong>Todo el proyecto:</strong> Resolver imprevistos en <24 horas</li>
+                </ul>
+            </div>
+
+            <div class="alert-success" style="margin-top: 30px;">
+                <h4>✅ Compromisos de Implementación</h4>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li><strong>Día 7:</strong> Sistema configurado, equipo capacitado, inicio de inventario</li>
+                    <li><strong>Día 14:</strong> 40% del inventario completado (~2,000 bienes)</li>
+                    <li><strong>Día 21:</strong> 85% del inventario completado (~4,400 bienes)</li>
+                    <li><strong>Día 28:</strong> 100% del inventario completado, validado y entregado</li>
+                    <li><strong>Soporte:</strong> Disponible 24/7 durante las 4 semanas</li>
+                </ul>
+            </div>
+
+            <div class="warning-box" style="margin-top: 30px;">
+                <h4>⚠️ Factores Críticos de Éxito</h4>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li><strong>Cronograma de accesos:</strong> Sin él, el proyecto se detiene</li>
+                    <li><strong>Disponibilidad del enlace:</strong> Resolución rápida de imprevistos</li>
+                    <li><strong>Coordinación de responsables:</strong> Acceso puntual a todas las áreas</li>
+                    <li><strong>Flexibilidad:</strong> Ajustar cronograma si surgen contingencias</li>
+                    <li><strong>Comunicación:</strong> Mantener canal abierto todo el tiempo</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 12: Contacto y Preguntas -->
+        <div class="slide">
+            <div class="header" style="border: none; padding-top: 100px;">
+                <div class="logo">💬</div>
+                <h1>¿Preguntas?</h1>
+                <div class="subtitle" style="margin-top: 40px;">Estamos listos para comenzar la transformación digital del Hospital Tierra y Libertad</div>
+            </div>
+
+            <div class="warning-box" style="margin-top: 40px; background: #ffebee; border-left: 5px solid #c62828;">
+                <h4 style="color: #b71c1c;">🚨 RECORDATORIO CRÍTICO</h4>
+                <p style="color: #c62828; font-size: 1.1em;"><strong>Timeline: Solo 4 semanas para completar inventario de 5,172 bienes</strong></p>
+                <p style="margin-top: 10px; color: #424242;">Es indispensable contar con el <strong>cronograma de accesos completo en los primeros 3 días</strong>. Sin esta información, no es posible coordinar el trabajo de campo y el proyecto se detendrá.</p>
+            </div>
+
+            <div class="info-box" style="margin-top: 40px;">
+                <h4>📞 Información del Proyecto</h4>
+                <p style="font-size: 1.2em; margin-top: 20px; line-height: 2;">
+                    <strong>Proyecto:</strong> Sistema de Inventario Digital SSNL<br>
+                    <strong>Hospital:</strong> Tierra y Libertad<br>
+                    <strong>Fecha:</strong> Noviembre 2025<br>
+                    <strong>Enlace COAF:</strong> Evidencia para procesos oficiales de Altas, Bajas y Transferencias
+                </p>
+            </div>
+
+            <div class="stats-container" style="margin-top: 60px;">
+                <div class="stat-box">
+                    <div class="stat-label">Bienes a Gestionar</div>
+                    <div class="stat-value">5,172</div>
+                </div>
+                <div class="stat-box" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                    <div class="stat-label">Valor Total</div>
+                    <div class="stat-value">$179.4M</div>
+                </div>
+                <div class="stat-box" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="stat-label">Plazo Total</div>
+                    <div class="stat-value">4 sem</div>
+                </div>
+                <div class="stat-box" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <div class="stat-label">Códigos Listos</div>
+                    <div class="stat-value">100%</div>
+                </div>
+            </div>
+
+            <div class="alert-success" style="margin-top: 60px; text-align: center;">
+                <h4 style="font-size: 1.5em;">¡Gracias por su atención!</h4>
+                <p style="font-size: 1.2em; margin-top: 20px;">Juntos transformaremos la gestión de activos del Hospital Tierra y Libertad</p>
+                <p style="font-size: 1em; margin-top: 20px; color: #666;">Siguiente paso: Designar enlace y entregar cronograma de accesos en 3 días</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">◀ Anterior</button>
+        <div class="slide-indicator" id="slideIndicator">Diapositiva 1 de 12</div>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Siguiente ▶</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+            
+            document.getElementById('slideIndicator').textContent = `Diapositiva ${currentSlide + 1} de ${totalSlides}`;
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentSlide > 0) {
+                changeSlide(-1);
+            } else if (e.key === 'ArrowRight' && currentSlide < totalSlides - 1) {
+                changeSlide(1);
+            } else if (e.key === 'f' || e.key === 'F') {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+        });
+
+        // Touch/swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50 && currentSlide < totalSlides - 1) {
+                changeSlide(1);
+            }
+            if (touchEndX > touchStartX + 50 && currentSlide > 0) {
+                changeSlide(-1);
+            }
+        }
+
+        showSlide(0);
+
+        console.log('Presentación Hospital Tierra y Libertad - Noviembre 2025');
+        console.log('Usa las flechas ← → para navegar');
+        console.log('Presiona F para pantalla completa');
+        console.log('Total de diapositivas: 12');
+    </script>
+</body>
+</html>
