@@ -1,0 +1,18 @@
+{
+  "name": "presentacion-tierra-libertad",
+  "version": "1.0.0",
+  "description": "Presentación Kick-Off Hospital Tierra y Libertad - Sistema de Inventario Digital",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "presentación",
+    "inventario",
+    "hospital",
+    "ssnl"
+  ],
+  "author": "SSNL Digital",
+  "license": "MIT"
+}
